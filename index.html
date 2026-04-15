@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Shop 日本定价工具</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 520px;
+      padding: 32px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fafafa;
+    }
+    input[type="number"]:focus, select:focus {
+      border-color: #fe2c55;
+      background: #fff;
+    }
+    .row3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 12px;
+    }
+    .radio-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .radio-btn input { display: none; }
+    .radio-btn.active {
+      border-color: #fe2c55;
+      background: #fff0f3;
+      color: #fe2c55;
+      font-weight: 600;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 24px 0;
+    }
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: #fe2c55;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .calc-btn:hover { background: #e01e43; }
+    .result-box {
+      margin-top: 24px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      display: none;
+    }
+    .result-box.show { display: block; }
+    .result-main {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+    .result-main span { color: #222; font-weight: 600; }
+    .result-fee {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .fee-jpy {
+      font-size: 28px;
+      font-weight: 700;
+      color: #222;
+    }
+    .fee-rmb {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fe2c55;
+      padding-bottom: 2px;
+    }
+    .fee-label {
+      font-size: 12px;
+      color: #999;
+      padding-bottom: 6px;
+    }
+    .warn-box {
+      margin-top: 12px;
+      background: #fff8e1;
+      border-left: 3px solid #ffc107;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #8a6000;
+      display: none;
+    }
+    .warn-box.show { display: block; }
+    .breakdown {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #999;
+      line-height: 1.9;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+    }
+    .breakdown span { color: #555; }
+    .ref-section {
+      margin-top: 32px;
+    }
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .ref-table th {
+      background: #f5f5f5;
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 600;
+      color: #444;
+      border: 1px solid #eee;
+    }
+    .ref-table .sub-head th {
+      background: #fafafa;
+      font-weight: 500;
+      color: #888;
+      font-size: 12px;
+    }
+    .ref-table td {
+      padding: 7px 10px;
+      text-align: center;
+      border: 1px solid #f0f0f0;
+      color: #333;
+    }
+    .ref-table tbody tr:nth-child(even) td { background: #fafafa; }
+    .ref-table tbody tr:hover td { background: #fff0f3; }
+    .pricing-section {
+      margin-top: 32px;
+      border-top: 2px solid #f0f0f0;
+      padding-top: 28px;
+    }
+    .pricing-result {
+      margin-top: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      display: none;
+    }
+    .pricing-result.show { display: block; }
+    .pricing-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+    }
+    .pricing-row:last-child { border-bottom: none; }
+    .pricing-row .label { color: #888; }
+    .pricing-row .value { font-weight: 700; color: #222; font-size: 15px; }
+    .pricing-row .value.highlight { color: #fe2c55; font-size: 22px; }
+    .pricing-row .value.green { color: #22a861; }
+    .pricing-note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #aaa;
+      line-height: 1.8;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>TikTok Shop 日本定价工具</h1>
+  <p class="subtitle">运费计算 + 定价建议 · 2026年4月24日价卡 · Standard渠道</p>
+
+  <div class="section-title">包裹信息</div>
+
+  <div class="form-group">
+    <label>实际重量（kg）</label>
+    <input type="number" id="weight" placeholder="例：1.5" min="0.05" max="30" step="0.01">
+  </div>
+
+  <div class="form-group">
+    <label>包裹尺寸（cm）<span style="color:#aaa;font-weight:400;font-size:12px">— 填了才能算体积重</span></label>
+    <div class="row3">
+      <input type="number" id="len" placeholder="长" min="1" step="0.1">
+      <input type="number" id="width" placeholder="宽" min="1" step="0.1">
+      <input type="number" id="height" placeholder="高" min="1" step="0.1">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>货物类型</label>
+    <div class="radio-group">
+      <label class="radio-btn active" id="label-puhuo">
+        <input type="radio" name="goods" value="普货" checked>
+        普货
+      </label>
+      <label class="radio-btn" id="label-tehuo">
+        <input type="radio" name="goods" value="特货">
+        特货（带电/液体等）
+      </label>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title">汇率设置</div>
+  <div class="form-group">
+    <div class="row2">
+      <div>
+        <label>日元汇率（1 JPY = ? CNY）</label>
+        <input type="number" id="rate" value="0.0476" step="0.0001" min="0.01">
+      </div>
+      <div>
+        <label style="color:transparent">.</label>
+        <div style="padding:10px 0;font-size:12px;color:#aaa;line-height:1.6">
+          参考：2026年4月均值<br>可自行修改为实时汇率
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">计算运费</button>
+
+  <div class="pricing-section">
+    <div class="section-title">定价计算</div>
+
+    <div class="form-group">
+      <label>采购价（CNY）</label>
+      <input type="number" id="costPrice" placeholder="例：15.00" min="0" step="0.01">
+    </div>
+
+    <div class="form-group">
+      <label>商家承担运费（CNY）<span style="color:#aaa;font-weight:400;font-size:12px">— 算过运费后自动填入，也可手动改</span></label>
+      <input type="number" id="shippingCny" placeholder="点击上方「计算运费」自动填入" min="0" step="0.01">
+    </div>
+
+    <div style="font-size:12px;color:#aaa;margin-bottom:16px;line-height:1.9;background:#f9f9f9;border-radius:8px;padding:10px 14px;">
+      预设参数：折扣 <b style="color:#555">4折</b> · 平台手续费 <b style="color:#555">10%</b> · 目标利润 <b style="color:#555">1.4倍</b> · 汇率同上
+    </div>
+
+    <button class="calc-btn" onclick="calculatePricing()">计算建议定价</button>
+
+    <div class="pricing-result" id="pricingResult">
+      <div class="pricing-row">
+        <span class="label">建议挂牌价</span>
+        <span class="value highlight" id="pr-listing"></span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">买家实付（4折后）</span>
+        <span class="value" id="pr-buyer"></span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">平台扣费后到账（JPY）</span>
+        <span class="value" id="pr-after-fee"></span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">人民币到手</span>
+        <span class="value" id="pr-cny"></span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">实际利润</span>
+        <span class="value green" id="pr-profit"></span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">实际利润倍数</span>
+        <span class="value green" id="pr-ratio"></span>
+      </div>
+      <div class="pricing-note" id="pr-note"></div>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="section-title">运费参考表 <span style="font-weight:400;color:#aaa;font-size:11px">100g–2000g · 已扣除买家运费¥350</span></div>
+    <div id="refTableWrap"></div>
+  </div>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-main" id="resultMain"></div>
+    <div class="result-fee" id="resultFee"></div>
+    <div class="warn-box" id="warnBox"></div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+</div>
+
+<script>
+  // 价卡数据：[最大重量kg, perParcel日元, perKg日元]
+  const priceTable = {
+    普货: [
+      [0.5,  545, 340],
+      [1,    560, 340],
+      [2,    590, 340],
+      [5,    590, 405],
+      [10,   590, 415],
+      [20,   590, 425],
+      [30,   590, 435],
+    ],
+    特货: [
+      [0.5,  555, 400],
+      [1,    580, 420],
+      [2,    610, 420],
+      [5,    610, 510],
+      [10,   610, 525],
+      [20,   610, 535],
+      [30,   610, 545],
+    ]
+  };
+
+  // 切换货物类型样式
+  document.querySelectorAll('input[name="goods"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.getElementById('label-puhuo').classList.remove('active');
+      document.getElementById('label-tehuo').classList.remove('active');
+      if (radio.value === '普货') {
+        document.getElementById('label-puhuo').classList.add('active');
+      } else {
+        document.getElementById('label-tehuo').classList.add('active');
+      }
+    });
+  });
+
+  function calculate() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const len    = parseFloat(document.getElementById('len').value);
+    const w      = parseFloat(document.getElementById('width').value);
+    const h      = parseFloat(document.getElementById('height').value);
+    const rate   = parseFloat(document.getElementById('rate').value);
+    const type   = document.querySelector('input[name="goods"]:checked').value;
+
+    if (!weight || weight <= 0) {
+      alert('请输入实际重量');
+      return;
+    }
+    if (weight > 30) {
+      alert('单包裹超过30kg，超出限重');
+      return;
+    }
+    if (!rate || rate <= 0) {
+      alert('请输入有效汇率');
+      return;
+    }
+
+    // 计算体积重
+    let volWeight = null;
+    let usedVolWeight = false;
+    if (len > 0 && w > 0 && h > 0) {
+      volWeight = (len * w * h) / 8000;
+      volWeight = Math.round(volWeight * 1000) / 1000; // 保留3位
+    }
+
+    // 判断计费重量
+    let billableWeight = weight;
+    if (volWeight !== null && volWeight > weight * 1.5) {
+      billableWeight = volWeight;
+      usedVolWeight = true;
+    }
+
+    // 最低50g = 0.05kg
+    if (billableWeight < 0.05) billableWeight = 0.05;
+
+    // 查价卡
+    const table = priceTable[type];
+    let perParcel = 0, perKg = 0;
+    for (const [maxKg, pp, pk] of table) {
+      if (billableWeight <= maxKg) {
+        perParcel = pp;
+        perKg = pk;
+        break;
+      }
+    }
+
+    // 计算运费
+    const feeJpy = perParcel + billableWeight * perKg - 350;
+    const feeRmb = feeJpy * rate;
+
+    // 展示
+    const resultBox = document.getElementById('resultBox');
+    resultBox.classList.add('show');
+
+    let mainHtml = '';
+    mainHtml += `货物类型：<span>${type}</span>　实际重量：<span>${weight} kg</span>`;
+    if (volWeight !== null) {
+      mainHtml += `　体积重：<span>${volWeight} kg</span>`;
+    }
+    mainHtml += `<br>计费重量：<span>${billableWeight} kg</span>`;
+    if (usedVolWeight) {
+      mainHtml += `　<span style="color:#fe2c55">（按体积重计费）</span>`;
+    }
+
+    document.getElementById('resultMain').innerHTML = mainHtml;
+
+    document.getElementById('resultFee').innerHTML = `
+      <div>
+        <div class="fee-label">运费（日元）</div>
+        <div class="fee-jpy">¥${Math.ceil(feeJpy).toLocaleString()} JPY</div>
+      </div>
+      <div style="color:#ccc;padding-bottom:6px;font-size:20px">=</div>
+      <div>
+        <div class="fee-label">约合人民币</div>
+        <div class="fee-rmb">￥${feeRmb.toFixed(2)} CNY</div>
+      </div>
+    `;
+
+    const warnBox = document.getElementById('warnBox');
+    if (usedVolWeight) {
+      warnBox.classList.add('show');
+      warnBox.textContent = `体积重（${volWeight}kg）超过实重（${weight}kg）的1.5倍，已按体积重计费。建议优化包装压缩体积。`;
+    } else {
+      warnBox.classList.remove('show');
+    }
+
+    document.getElementById('breakdown').innerHTML =
+      `计算明细：底价 ¥${perParcel} + ${billableWeight}kg × ¥${perKg}/kg - 买家运费 ¥350 = ¥${Math.ceil(feeJpy)} JPY<br>` +
+      `汇率：1 JPY = ${rate} CNY`;
+
+    // 自动填入运费到定价模块
+    document.getElementById('shippingCny').value = feeRmb.toFixed(2);
+
+    renderRefTable();
+  }
+
+  function calculatePricing() {
+    const cost     = parseFloat(document.getElementById('costPrice').value);
+    const shipping = parseFloat(document.getElementById('shippingCny').value);
+    const rate     = parseFloat(document.getElementById('rate').value) || 0.0476;
+    const discount = 0.4;
+    const fee      = 0.1;
+    const target   = 1.4;
+
+    if (!cost || cost <= 0) { alert('请输入采购价'); return; }
+    if (!shipping || shipping < 0) { alert('请输入运费，或先点击上方「计算运费」'); return; }
+
+    // 建议挂牌价（JPY，向上取整到10）
+    const listingExact = (cost * target + shipping) / (discount * (1 - fee) * rate);
+    const listing = Math.ceil(listingExact / 10) * 10;
+
+    // 验算实际结果
+    const buyerPay   = listing * discount;                    // 买家实付JPY
+    const afterFee   = buyerPay * (1 - fee);                  // 平台扣后JPY
+    const cnyIn      = afterFee * rate - shipping;            // 人民币到手
+    const profit     = cnyIn - cost;                          // 纯利润
+    const ratio      = cnyIn / cost;                          // 利润倍数
+
+    document.getElementById('pr-listing').textContent  = `¥${listing.toLocaleString()} JPY`;
+    document.getElementById('pr-buyer').textContent    = `¥${buyerPay.toLocaleString()} JPY`;
+    document.getElementById('pr-after-fee').textContent = `¥${Math.round(afterFee).toLocaleString()} JPY`;
+    document.getElementById('pr-cny').textContent      = `￥${cnyIn.toFixed(2)} CNY`;
+    document.getElementById('pr-profit').textContent   = `￥${profit.toFixed(2)} CNY`;
+    document.getElementById('pr-ratio').textContent    = `${ratio.toFixed(2)} 倍`;
+    document.getElementById('pr-note').innerHTML =
+      `计算公式：(采购价 ${cost} × 1.4 + 运费 ${shipping}) ÷ (4折 × 0.9 × 汇率 ${rate}) = ${listingExact.toFixed(1)} → 取整 ${listing} JPY`;
+
+    document.getElementById('pricingResult').classList.add('show');
+  }
+
+  function calcFee(weightKg, type) {
+    const table = priceTable[type];
+    let perParcel = 0, perKg = 0;
+    for (const [maxKg, pp, pk] of table) {
+      if (weightKg <= maxKg) { perParcel = pp; perKg = pk; break; }
+    }
+    return perParcel + weightKg * perKg - 350;
+  }
+
+  function renderRefTable() {
+    const rate = parseFloat(document.getElementById('rate').value) || 0.0476;
+    const weights = [];
+    for (let g = 100; g <= 2000; g += 100) weights.push(g);
+
+    let rows = weights.map(g => {
+      const kg = g / 1000;
+      const ph = calcFee(kg, '普货');
+      const th = calcFee(kg, '特货');
+      return `<tr>
+        <td>${g}g</td>
+        <td>¥${Math.ceil(ph)}</td>
+        <td style="color:#fe2c55">￥${(ph * rate).toFixed(2)}</td>
+        <td>¥${Math.ceil(th)}</td>
+        <td style="color:#fe2c55">￥${(th * rate).toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('refTableWrap').innerHTML = `
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>重量</th>
+            <th colspan="2">普货</th>
+            <th colspan="2">特货</th>
+          </tr>
+          <tr class="sub-head">
+            <th></th>
+            <th>JPY</th><th>CNY</th>
+            <th>JPY</th><th>CNY</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  // 页面加载时直接渲染参考表
+  window.addEventListener('DOMContentLoaded', renderRefTable);
+  document.getElementById('rate').addEventListener('input', renderRefTable);
+</script>
+</body>
+</html>
