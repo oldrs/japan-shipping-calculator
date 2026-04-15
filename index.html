@@ -17,10 +17,13 @@
     --ink-3: #8a8680;
     --line: #e4e0d7;
     --line-2: #efece5;
-    --accent: #c8102e;
-    --accent-soft: #fde8ec;
-    --good: #1a7f4e;
-    --good-soft: #e6f4ec;
+    --primary: #0d9488;      /* 主色：清爽薄荷蓝绿 */
+    --primary-dark: #0f766e;
+    --primary-soft: #ccfbf1;
+    --accent: #e11d48;       /* 强调：玫瑰红 */
+    --accent-soft: #ffe4e6;
+    --good: #059669;
+    --good-soft: #d1fae5;
     --warn-bg: #fff4de;
     --warn-ink: #8a5a00;
   }
@@ -43,13 +46,13 @@
     align-items: flex-end;
     justify-content: space-between;
     padding-bottom: 24px;
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 2px solid var(--primary);
     margin-bottom: 32px;
     gap: 20px;
     flex-wrap: wrap;
   }
   .brand { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); }
-  .brand .accent { color: var(--accent); }
+  .brand .accent { color: var(--primary); }
   .brand-sub { font-size: 14px; color: var(--ink-2); margin-top: 8px; font-weight: 500; }
   .header-meta { font-size: 12px; color: var(--ink-3); font-weight: 500; }
   .header-meta b { color: var(--accent); font-weight: 700; }
@@ -75,7 +78,7 @@
   .panel-num {
     flex-shrink: 0;
     width: 28px; height: 28px;
-    background: var(--ink);
+    background: var(--primary);
     color: #fff;
     border-radius: 8px;
     display: flex;
@@ -160,13 +163,13 @@
     user-select: none;
   }
   .pill:hover { border-color: var(--ink-3); }
-  .pill.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
   .pill input { display: none; }
 
   /* ========= SUMMARY CARDS (总成本, 挂牌价, etc) ========= */
   .summary-card {
     margin-top: 18px;
-    background: var(--ink);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: #fff;
     border-radius: 12px;
     padding: 18px 20px;
@@ -206,8 +209,8 @@
   .override-field { position: relative; }
   .override-field input {
     background: #fff;
-    border: 2px solid var(--accent);
-    color: var(--accent);
+    border: 2px solid var(--primary);
+    color: var(--primary-dark);
     font-weight: 800;
     font-size: 22px;
     padding-right: 98px;
@@ -272,7 +275,7 @@
     font-size: 12px;
     text-align: right;
     padding: 8px 10px;
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 2px solid var(--primary);
     background: var(--bg-grain);
   }
   .tier-table th:first-child { text-align: left; }
@@ -368,7 +371,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    background: var(--ink);
+    background: var(--primary);
     color: #fff;
     border: none;
     padding: 13px 24px;
@@ -379,9 +382,24 @@
     letter-spacing: 0.02em;
     cursor: pointer;
     transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(13,148,136,0.25);
   }
-  .btn:hover { background: var(--accent); }
+  .btn:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(13,148,136,0.35); }
   .btn-block { width: 100%; }
+  .btn-small {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+  .btn-outline {
+    background: #fff;
+    color: var(--primary-dark);
+    border: 1.5px solid var(--primary);
+    box-shadow: none;
+  }
+  .btn-outline:hover { background: var(--primary-soft); color: var(--primary-dark); box-shadow: none; }
 
   /* ========= REF TABLE ========= */
   .ref-wrap { overflow-x: auto; }
@@ -413,7 +431,7 @@
 
   /* ========= FORMULA BLOCK ========= */
   .formula-panel {
-    background: var(--ink);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: #fff;
     border-radius: 14px;
     padding: 24px 28px;
@@ -421,9 +439,19 @@
   .formula-title {
     font-size: 18px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     color: #fff;
   }
+  .formula-legend {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 18px;
+    line-height: 1.9;
+  }
+  .formula-legend b { color: #fff; font-weight: 700; }
   .formula-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -431,10 +459,10 @@
   }
   .formula-item {
     font-size: 13px;
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.9);
     line-height: 1.9;
     padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
   .formula-item:last-child,
   .formula-item:nth-last-child(2) { border-bottom: none; }
@@ -443,8 +471,70 @@
     font-weight: 700;
     color: #fff;
   }
-  .formula-item code.var { color: #ffb3c0; }
+  .formula-item code.var { color: #fde68a; }
   .formula-item code.green { color: #86efac; }
+  .formula-item b { color: #fff; font-weight: 800; font-size: 14px; }
+
+  /* ========= MINI SHIPPING CALC (inline in cost panel) ========= */
+  .mini-ship {
+    background: var(--primary-soft);
+    border: 1px dashed var(--primary);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 8px;
+  }
+  .mini-ship-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mini-ship-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .mini-ship-row input {
+    padding: 7px 9px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #fff;
+    border: 1px solid transparent;
+  }
+  .mini-ship-row input:focus { border-color: var(--primary); }
+  .mini-ship-row input::placeholder { color: var(--ink-3); font-weight: 500; }
+  .mini-ship-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .mini-ship-actions .mini-pills { flex: 1; display: flex; gap: 4px; }
+  .mini-pill {
+    flex: 1;
+    padding: 6px 0;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink-2);
+    cursor: pointer;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+  .mini-pill.active { background: var(--primary); color: #fff; }
+  .mini-ship-hint {
+    font-size: 11px;
+    color: var(--primary-dark);
+    margin-top: 6px;
+    font-weight: 500;
+    display: none;
+  }
+  .mini-ship-hint.show { display: block; }
 
   /* ========= FOOTER ========= */
   .page-footer {
@@ -502,9 +592,25 @@
       </div>
 
       <div class="field">
-        <label>海外运费 <span class="tag">ship · 自动带入</span></label>
-        <input type="number" id="shippingCny" placeholder="下方算完自动填入" step="0.01" min="0">
-        <div class="hint">也可手动输入，或忽略由下方运费计算器填充</div>
+        <label>海外运费 <span class="tag">CNY</span></label>
+        <input type="number" id="shippingCny" placeholder="手动输入，或用下方快捷计算" step="0.01" min="0">
+        <div class="mini-ship">
+          <div class="mini-ship-title">⚡ 快捷算运费（默认普货，不填尺寸则不算泡）</div>
+          <div class="mini-ship-row">
+            <input type="number" id="miniWeight" placeholder="重量kg" step="0.01" min="0.05" max="30">
+            <input type="number" id="miniLen" placeholder="长cm" step="0.1" min="0">
+            <input type="number" id="miniWidth" placeholder="宽cm" step="0.1" min="0">
+            <input type="number" id="miniHeight" placeholder="高cm" step="0.1" min="0">
+          </div>
+          <div class="mini-ship-actions">
+            <div class="mini-pills">
+              <div class="mini-pill active" id="miniPillPu" data-type="普货">普货</div>
+              <div class="mini-pill" id="miniPillTe" data-type="特货">特货</div>
+            </div>
+            <button class="btn btn-small" type="button" onclick="miniCalc()">算 → 填入</button>
+          </div>
+          <div class="mini-ship-hint" id="miniHint"></div>
+        </div>
       </div>
 
       <div class="field">
@@ -680,30 +786,37 @@
   <!-- ============ 公式说明 ============ -->
   <section class="formula-panel">
     <div class="formula-title">📐 计算公式一览</div>
+    <div class="formula-legend">
+      <b>变量说明：</b>
+      <b style="color:#fde68a">汇率</b>=1元兑多少日元（如 23.34）·
+      <b style="color:#fde68a">手续费</b>=平台扣点（0.1 表示 10%）·
+      <b style="color:#fde68a">运费</b>=商家承担的海外运费（CNY）·
+      <b>成本</b>=采购 + 运费 + 贴牌费
+    </div>
     <div class="formula-grid">
       <div class="formula-item">
         <b>① 总成本（CNY）</b><br>
-        <code class="var">成本</code> = <code>采购</code> + <code class="var">运费</code> + <code>贴牌费 1.5</code>
+        <code>成本</code> = <code>采购费用</code> + <code class="var">运费</code> + <code>贴牌费 1.5</code>
       </div>
       <div class="formula-item">
         <b>② 反推挂牌原价（JPY）</b><br>
-        <code>原价</code> = <code class="var">成本</code> × <code>目标利润率</code> × <code class="var">rate</code> ÷ [<code>基准折扣</code> × (1 − <code class="var">fee</code>)]
+        <code>原价</code> = <code>成本</code> × <code>目标利润率</code> × <code class="var">汇率</code> ÷ [ <code>基准折扣</code> × (1 − <code class="var">手续费</code>) ]
       </div>
       <div class="formula-item">
         <b>③ 日元售价（平台扣费后）</b><br>
-        <code>日元售价</code> = <code>原价</code> × <code>折扣</code> × (1 − <code class="var">fee</code>)
+        <code>日元售价</code> = <code>原价</code> × <code>折扣</code> × (1 − <code class="var">手续费</code>)
       </div>
       <div class="formula-item">
-        <b>④ 到手 CNY（毛收入）</b><br>
-        <code class="green">到手</code> = <code>日元售价</code> ÷ <code class="var">rate</code>
+        <b>④ 到手 CNY（从平台收到的钱）</b><br>
+        <code class="green">到手</code> = <code>日元售价</code> ÷ <code class="var">汇率</code>
       </div>
       <div class="formula-item">
         <b>⑤ 纯利润（CNY）</b><br>
-        <code class="green">纯利润</code> = <code class="green">到手</code> − <code class="var">成本</code>
+        <code class="green">纯利润</code> = <code class="green">到手</code> − <code>成本</code>
       </div>
       <div class="formula-item">
-        <b>⑥ 实际利润率</b><br>
-        <code>利润率</code> = <code class="green">到手</code> ÷ <code class="var">成本</code>
+        <b>⑥ 实际利润率（倍）</b><br>
+        <code>利润率</code> = <code class="green">到手</code> ÷ <code>成本</code>
       </div>
     </div>
   </section>
@@ -988,6 +1101,50 @@
         <tbody>${rows}</tbody>
       </table>
     `;
+  }
+
+  // ============ 快捷运费计算 ============
+  let miniType = '普货';
+  document.querySelectorAll('.mini-pill').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.mini-pill').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      miniType = el.dataset.type;
+    });
+  });
+
+  function miniCalc() {
+    const weight = parseFloat($('miniWeight').value) || 0;
+    const len = parseFloat($('miniLen').value) || 0;
+    const w = parseFloat($('miniWidth').value) || 0;
+    const h = parseFloat($('miniHeight').value) || 0;
+    const rate = num('rate');
+    if (!weight) { alert('请输入重量'); return; }
+    if (weight > 30) { alert('单包裹超过 30kg'); return; }
+
+    let billable = weight, usedVol = false, volWeight = null;
+    if (len > 0 && w > 0 && h > 0) {
+      volWeight = Math.round((len * w * h) / 8000 * 1000) / 1000;
+      if (volWeight > weight * 1.5) { billable = volWeight; usedVol = true; }
+    }
+    if (billable < 0.05) billable = 0.05;
+
+    const table = priceTable[miniType];
+    let pp = 0, pk = 0;
+    for (const [maxKg, _pp, _pk] of table) {
+      if (billable <= maxKg) { pp = _pp; pk = _pk; break; }
+    }
+    const feeJpy = pp + billable * pk - 350;
+    const feeCny = feeJpy / rate;
+
+    $('shippingCny').value = fmt(feeCny);
+    const hint = $('miniHint');
+    hint.classList.add('show');
+    let msg = `✓ ${miniType} · 计费重 <b>${billable}kg</b>`;
+    if (usedVol) msg += ` <b style="color:#b91c1c">（按体积重）</b>`;
+    msg += ` → 运费 <b>¥${Math.ceil(feeJpy)} JPY ≈ ￥${fmt(feeCny)} CNY</b> 已填入`;
+    hint.innerHTML = msg;
+    recalcAll();
   }
 
   // ============ 初始化 ============
