@@ -46,12 +46,12 @@
     align-items: flex-end;
     justify-content: space-between;
     padding-bottom: 24px;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 1px solid var(--line);
     margin-bottom: 32px;
     gap: 20px;
     flex-wrap: wrap;
   }
-  .brand { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); }
+  .brand { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); }
   .brand .accent { color: var(--primary); }
   .brand-sub { font-size: 14px; color: var(--ink-2); margin-top: 8px; font-weight: 500; }
   .header-meta { font-size: 12px; color: var(--ink-3); font-weight: 500; }
@@ -275,7 +275,7 @@
     font-size: 12px;
     text-align: right;
     padding: 8px 10px;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: none;
     background: var(--bg-grain);
   }
   .tier-table th:first-child { text-align: left; }
@@ -536,6 +536,29 @@
   }
   .mini-ship-hint.show { display: block; }
 
+  /* ========= FORMULA CHIPS ========= */
+  .formula-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .fchip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--bg-grain);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-2);
+    line-height: 1.4;
+  }
+  .fchip .fchip-key { color: var(--primary-dark); font-weight: 700; }
+  .fchip .fchip-eq { color: var(--ink-3); margin: 0 2px; }
+
   /* ========= FOOTER ========= */
   .page-footer {
     margin-top: 24px;
@@ -549,11 +572,24 @@
     gap: 16px;
   }
 
+  /* ========= PANEL INNER GRID ========= */
+  .panel-inner-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .panel-inner-divider {
+    border: none;
+    border-top: 1px solid var(--line-2);
+    margin: 18px 0;
+  }
+
   /* ========= RESPONSIVE ========= */
   @media (max-width: 960px) {
     .page { padding: 24px 16px 40px; }
     .grid-3, .grid-2 { grid-template-columns: 1fr; }
     .ship-calc-wrap { grid-template-columns: 1fr; }
+    .panel-inner-grid { grid-template-columns: 1fr; }
     .brand { font-size: 26px; }
     .formula-grid { grid-template-columns: 1fr; }
     .field-row { grid-template-columns: 1fr; }
@@ -569,11 +605,11 @@
       <div class="brand-sub">成本核算 × 利润反推 × 运费计算 × 档位一览</div>
     </div>
     <div class="header-meta">
-      <b>v3</b> · 基于 2026年4月24日 Standard 价卡
+      <b>v4</b> · 基于 2026年4月24日 Standard 价卡
     </div>
   </header>
 
-  <!-- ============ 第一行：成本 / 参数 / 定价结果 ============ -->
+  <!-- ============ 第一行：成本 / 参数 / 结果 ============ -->
   <div class="grid-3">
 
     <!-- 01 成本构成 -->
@@ -587,12 +623,12 @@
       </div>
 
       <div class="field">
-        <label>采购费用 <span class="tag">CNY</span></label>
+        <label>采购费用 <span class="tag">CNY · 一件代发实付金额</span></label>
         <input type="number" id="costPrice" placeholder="例：30" min="0" step="0.01" value="30">
       </div>
 
       <div class="field">
-        <label>海外运费 <span class="tag">CNY</span></label>
+        <label>海外运费 <span class="tag">CNY · TK官方代扣</span></label>
         <input type="number" id="shippingCny" placeholder="手动输入，或用下方快捷计算" step="0.01" min="0">
         <div class="mini-ship">
           <div class="mini-ship-title">⚡ 快捷算运费（默认普货，不填尺寸则不算泡）</div>
@@ -614,7 +650,7 @@
       </div>
 
       <div class="field">
-        <label>贴牌费 <span class="tag">fixed</span></label>
+        <label>贴牌费 <span class="tag">CNY · 万利达收</span></label>
         <input type="number" id="brandFee" value="1.5" step="0.1" min="0">
       </div>
 
@@ -634,18 +670,15 @@
           <div class="panel-title-sub">利润率 · 折扣 · 手续费 · 汇率</div>
         </div>
       </div>
-
       <div class="field">
-        <label>目标利润率 <span class="tag">× cost</span></label>
+        <label>目标利润率 <span class="tag">倍</span></label>
         <input type="number" id="targetProfit" value="1.4" step="0.1" min="1">
-        <div class="hint">到手 CNY = 总成本 × 目标利润率（1.4 表示到手是成本的 1.4 倍）</div>
+        <div class="hint">到手CNY ÷ (采购+贴牌) = 目标利润率</div>
       </div>
-
       <div class="field">
-        <label>基准折扣档位 <span class="tag">base</span></label>
+        <label>基准折扣档位</label>
         <div class="pills" id="basePills"></div>
       </div>
-
       <div class="field-row">
         <div class="field">
           <label>平台手续费 <span class="tag">%</span></label>
@@ -656,11 +689,10 @@
           <input type="number" id="rate" value="23.34" step="0.01" min="1">
         </div>
       </div>
-
       <div class="field">
-        <label>档位列表 <span class="tag">逗号分隔</span></label>
+        <label>折扣档位列表 <span class="tag">逗号分隔</span></label>
         <input type="text" id="tiersInput" value="0.35, 0.38, 0.4, 0.42, 0.45, 0.48, 0.5">
-        <div class="hint">支持 <code>0.4</code> / <code>40%</code> / <code>4</code> 三种写法</div>
+        <div class="hint">支持 <code>0.4</code> / <code>40%</code> / <code>4</code></div>
       </div>
     </section>
 
@@ -673,27 +705,25 @@
           <div class="panel-title-sub">反推挂牌原价 + 基准档位结算</div>
         </div>
       </div>
-
       <div class="field">
-        <label>挂牌原价 <span class="tag">JPY · 反推</span></label>
+        <label>挂牌原价 <span class="tag">JPY · 自动反推</span></label>
         <div class="override-field">
           <input type="number" id="listingPrice" placeholder="自动计算" step="1">
           <button class="override-btn" id="overrideBtn" type="button">可手动覆盖</button>
         </div>
         <div class="hint" id="listingFormula"></div>
       </div>
-
       <div class="result-grid">
         <div class="result-tile accent">
           <div class="tile-label">到手 CNY</div>
           <div class="tile-value" id="resCny">￥0.00</div>
         </div>
         <div class="result-tile good">
-          <div class="tile-label">纯利润</div>
+          <div class="tile-label">毛利润</div>
           <div class="tile-value" id="resProfit">￥0.00</div>
         </div>
         <div class="result-tile">
-          <div class="tile-label">日元售价</div>
+          <div class="tile-label">日元售价（买家付）</div>
           <div class="tile-value" id="resJpy">¥0</div>
         </div>
         <div class="result-tile">
@@ -701,6 +731,7 @@
           <div class="tile-value" id="resRatio">0.00×</div>
         </div>
       </div>
+      <div class="panel-title-sub" style="margin-top:14px">日元售价 = 原价 × 折扣 &nbsp;·&nbsp; 到手CNY = 到手日元 ÷ 汇率 − 运费 &nbsp;·&nbsp; 毛利润 = 到手CNY − 采购 − 贴牌</div>
     </section>
 
   </div>
@@ -710,8 +741,8 @@
     <div class="panel-head">
       <div class="panel-num">04</div>
       <div>
-        <div class="panel-title-main">各折扣档位 / 到手一览</div>
-        <div class="panel-title-sub">在不同折扣下的日元售价、到手 CNY、纯利润、利润率</div>
+        <div class="panel-title-main">各折扣档位一览</div>
+        <div class="panel-title-sub">日元售价 = 原价 × 折扣 &nbsp;·&nbsp; 到手CNY = 到手日元 ÷ 汇率 − 运费 &nbsp;·&nbsp; 毛利润 = 到手CNY − 采购 − 贴牌</div>
       </div>
     </div>
     <div id="tierTableWrap"></div>
@@ -723,7 +754,7 @@
       <div class="panel-num">05</div>
       <div>
         <div class="panel-title-main">运费计算</div>
-        <div class="panel-title-sub">根据包裹重量 / 尺寸 / 货物类型，计算商家承担运费</div>
+        <div class="panel-title-sub">根据包裹重量 / 尺寸 / 货物类型，计算商家承担运费 · <a href="https://seller.tiktokglobalshop.com/university/essay?knowledge_id=6411933700818705&role=1&course_type=1&from=search%7BcontentIdParams%7D&identity=1" target="_blank" style="color:var(--primary);text-decoration:none;font-weight:600">官方价卡文档 ↗</a></div>
       </div>
     </div>
     <div class="ship-calc-wrap">
@@ -739,10 +770,9 @@
             <input type="number" id="width" placeholder="宽" min="1" step="0.1">
             <input type="number" id="height" placeholder="高" min="1" step="0.1">
           </div>
-          <div class="hint">体积重 = 长×宽×高÷8000，超实重×1.5 时按体积重计费</div>
         </div>
         <div class="field">
-          <label>货物类型 <span class="tag">type</span></label>
+          <label>货物类型</label>
           <div class="pills">
             <label class="pill active" id="pill-puhuo"><input type="radio" name="goods" value="普货" checked>普货</label>
             <label class="pill" id="pill-tehuo"><input type="radio" name="goods" value="特货">特货（带电/液体）</label>
@@ -763,9 +793,9 @@
         <div class="ship-placeholder" id="shipPlaceholder">
           <b>使用说明</b><br>
           1. 填实重（必填）<br>
-          2. 尺寸选填，用来判断超泡<br>
-          3. 选择货物类型<br>
-          4. 点按钮后，CNY 运费自动回填到成本模块
+          2. 尺寸选填，判断是否超泡按体积重<br>
+          3. 选普货 / 特货<br>
+          4. 点按钮，CNY运费自动回填成本栏
         </div>
       </div>
     </div>
@@ -788,35 +818,36 @@
     <div class="formula-title">📐 计算公式一览</div>
     <div class="formula-legend">
       <b>变量说明：</b>
-      <b style="color:#fde68a">汇率</b>=1元兑多少日元（如 23.34）·
-      <b style="color:#fde68a">手续费</b>=平台扣点（0.1 表示 10%）·
-      <b style="color:#fde68a">运费</b>=商家承担的海外运费（CNY）·
-      <b>成本</b>=采购 + 运费 + 贴牌费
+      <b style="color:#fde68a">汇率</b> = 1元兑多少日元（如 23.34）·
+      <b style="color:#fde68a">手续费</b> = 平台扣点（10% 填 10）·
+      <b style="color:#fde68a">运费</b> = TK官方代扣的海外运费（CNY）·
+      <b style="color:#fde68a">利润基数</b> = 采购 + 贴牌（运费TK直接从日元结算中扣，不计入此处）
     </div>
     <div class="formula-grid">
       <div class="formula-item">
-        <b>① 总成本（CNY）</b><br>
-        <code>成本</code> = <code>采购费用</code> + <code class="var">运费</code> + <code>贴牌费 1.5</code>
+        <b>① 总成本（参考用）</b><br>
+        <code>总成本</code> = <code>采购</code> + <code class="var">运费</code> + <code>贴牌</code>
       </div>
       <div class="formula-item">
         <b>② 反推挂牌原价（JPY）</b><br>
-        <code>原价</code> = <code>成本</code> × <code>目标利润率</code> × <code class="var">汇率</code> ÷ [ <code>基准折扣</code> × (1 − <code class="var">手续费</code>) ]
+        <code>原价</code> = [ (<code>采购</code>+<code>贴牌</code>) × <code>目标利润率</code> + <code class="var">运费</code> ] × <code class="var">汇率</code> ÷ [ <code>折扣</code> × (1 − <code class="var">手续费</code>) ]
       </div>
       <div class="formula-item">
-        <b>③ 日元售价（平台扣费后）</b><br>
-        <code>日元售价</code> = <code>原价</code> × <code>折扣</code> × (1 − <code class="var">手续费</code>)
+        <b>③ 日元售价（买家实付）</b><br>
+        <code>日元售价</code> = <code>原价</code> × <code>折扣</code>
       </div>
       <div class="formula-item">
-        <b>④ 到手 CNY（从平台收到的钱）</b><br>
-        <code class="green">到手</code> = <code>日元售价</code> ÷ <code class="var">汇率</code>
+        <b>④ 到手日元（TK扣手续费后）</b><br>
+        <code>到手日元</code> = <code>日元售价</code> × (1 − <code class="var">手续费</code>)
       </div>
       <div class="formula-item">
-        <b>⑤ 纯利润（CNY）</b><br>
-        <code class="green">纯利润</code> = <code class="green">到手</code> − <code>成本</code>
+        <b>⑤ 到手 CNY（实际到账）</b><br>
+        <code class="green">到手CNY</code> = <code>到手日元</code> ÷ <code class="var">汇率</code> − <code class="var">运费</code>
       </div>
       <div class="formula-item">
-        <b>⑥ 实际利润率（倍）</b><br>
-        <code>利润率</code> = <code class="green">到手</code> ÷ <code>成本</code>
+        <b>⑥ 毛利润 & 利润率</b><br>
+        <code class="green">毛利润</code> = <code class="green">到手CNY</code> − <code>采购</code> − <code>贴牌</code><br>
+        <code>利润率</code> = <code class="green">到手CNY</code> ÷ (<code>采购</code> + <code>贴牌</code>)
       </div>
     </div>
   </section>
@@ -882,27 +913,42 @@
 
   // ============ 计算核心 ============
   function calcTotalCost() {
+    // 总成本（参考用）= 采购 + 运费 + 贴牌
     return num('costPrice') + num('shippingCny') + num('brandFee');
   }
 
+  function calcProfitBase() {
+    // 利润基数 = 采购 + 贴牌（运费TK直接从日元扣，不算在此）
+    return num('costPrice') + num('brandFee');
+  }
+
   function calcListing() {
-    const total = calcTotalCost();
+    // 原价 = [(采购+贴牌)×目标 + 运费] × 汇率 / [折扣 × (1-手续费)]
+    const base   = calcProfitBase();
+    const ship   = num('shippingCny');
     const target = num('targetProfit');
-    const fee = num('platformFee') / 100;
-    const rate = num('rate');
-    if (!total || !rate || !baseDiscount) return 0;
-    return total * target * rate / (baseDiscount * (1 - fee));
+    const fee    = num('platformFee') / 100;
+    const rate   = num('rate');
+    if (!base || !rate || !baseDiscount) return 0;
+    return (base * target + ship) * rate / (baseDiscount * (1 - fee));
   }
 
   function calcRow(listing, discount) {
-    const fee = num('platformFee') / 100;
-    const rate = num('rate');
-    const cost = calcTotalCost();
-    const jpySale = listing * discount * (1 - fee);
-    const cny = jpySale / rate;
-    const profit = cny - cost;
-    const ratio = cost > 0 ? cny / cost : 0;
-    return { jpySale, cny, profit, ratio };
+    const fee   = num('platformFee') / 100;
+    const rate  = num('rate');
+    const ship  = num('shippingCny');
+    const base  = calcProfitBase();   // 采购 + 贴牌
+    // ① 日元售价（买家实付）= 原价 × 折扣
+    const jpySale   = listing * discount;
+    // ② 到手日元（TK扣手续费后）= 日元售价 × (1 - 手续费)
+    const jpyNet    = jpySale * (1 - fee);
+    // ③ 到手CNY = 到手日元 ÷ 汇率 - 运费
+    const cny       = jpyNet / rate - ship;
+    // ④ 毛利润 = 到手CNY - 采购 - 贴牌
+    const profit    = cny - base;
+    // ⑤ 利润率 = 到手CNY ÷ (采购+贴牌)
+    const ratio     = base > 0 ? cny / base : 0;
+    return { jpySale, jpyNet, cny, profit, ratio };
   }
 
   // ============ 渲染：成本卡 ============
@@ -918,21 +964,22 @@
   function renderPricingResult() {
     const listing = parseFloat($('listingPrice').value) || 0;
     const r = calcRow(listing, baseDiscount);
-    const profitClass = r.profit >= 0 ? 'good' : 'accent';
-    $('resCny').textContent = `￥${fmt(r.cny)}`;
-    $('resJpy').textContent = `¥${Math.round(r.jpySale).toLocaleString()}`;
-    $('resProfit').textContent = `${r.profit >= 0 ? '￥' : '-￥'}${fmt(Math.abs(r.profit))}`;
-    $('resProfit').parentElement.classList.toggle('good', r.profit >= 0);
-    $('resProfit').parentElement.classList.toggle('accent', r.profit < 0);
-    $('resRatio').textContent = `${r.ratio.toFixed(2)}×`;
+    const base = calcProfitBase();
 
-    // 公式说明
-    const total = calcTotalCost();
-    const fee = num('platformFee') / 100;
+    $('resCny').textContent     = `￥${fmt(r.cny)}`;
+    $('resJpy').textContent     = `¥${Math.round(r.jpySale).toLocaleString()}`;
+    $('resProfit').textContent  = `${r.profit >= 0 ? '￥' : '-￥'}${fmt(Math.abs(r.profit))}`;
+    $('resProfit').parentElement.classList.toggle('good',   r.profit >= 0);
+    $('resProfit').parentElement.classList.toggle('accent', r.profit < 0);
+    $('resRatio').textContent   = `${r.ratio.toFixed(2)}×`;
+
+    // 公式展示
+    const fee  = num('platformFee') / 100;
     const rate = num('rate');
-    if (!manualListing && total > 0) {
+    const ship = num('shippingCny');
+    if (!manualListing && base > 0) {
       $('listingFormula').innerHTML =
-        `= ${fmt(total)} × ${num('targetProfit')} × ${rate} ÷ (${baseDiscount} × ${(1-fee).toFixed(2)}) = <b>${listing} JPY</b>`;
+        `= (${fmt(base)}×${num('targetProfit')} + ${fmt(ship)}) × ${rate} ÷ (${baseDiscount} × ${(1-fee).toFixed(2)}) = <b>${listing} JPY</b>`;
     } else {
       $('listingFormula').innerHTML = manualListing ? '手动输入中' : '填入成本后自动计算';
     }
@@ -940,17 +987,18 @@
 
   // ============ 渲染：档位表 ============
   function renderTierTable() {
-    const tiers = parseTiers();
+    const tiers   = parseTiers();
     const listing = parseFloat($('listingPrice').value) || 0;
     const rows = tiers.map(t => {
-      const r = calcRow(listing, t);
+      const r      = calcRow(listing, t);
       const active = Math.abs(t - baseDiscount) < 1e-6;
-      const profitClass = r.profit >= 0 ? 'cny' : 'loss';
+      const pClass = r.profit >= 0 ? 'cny' : 'loss';
       return `<tr class="${active ? 'highlight' : ''}">
         <td>${fmtDiscount(t)}</td>
         <td>${Math.round(r.jpySale).toLocaleString()} 円</td>
+        <td>${Math.round(r.jpyNet).toLocaleString()} 円</td>
         <td class="cny">￥${fmt(r.cny)}</td>
-        <td class="${profitClass}">${r.profit >= 0 ? '￥' : '-￥'}${fmt(Math.abs(r.profit))}</td>
+        <td class="${pClass}">${r.profit >= 0 ? '￥' : '-￥'}${fmt(Math.abs(r.profit))}</td>
         <td>${r.ratio.toFixed(2)}×</td>
       </tr>`;
     }).join('');
@@ -958,9 +1006,10 @@
       <table class="tier-table">
         <thead><tr>
           <th>折扣</th>
-          <th>日元售价</th>
+          <th>日元售价（买家付）</th>
+          <th>到手日元（扣手续费）</th>
           <th>到手 CNY</th>
-          <th>纯利润</th>
+          <th>毛利润</th>
           <th>利润率</th>
         </tr></thead>
         <tbody>${rows}</tbody>
